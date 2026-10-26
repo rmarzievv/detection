@@ -1,0 +1,22 @@
+positive:
+  - name: procdump-style full access from user dir
+    event:
+      SourceImage: 'C:\Users\bob\Downloads\procdump64.exe'
+      TargetImage: 'C:\Windows\System32\lsass.exe'
+      GrantedAccess: '0x1fffff'
+  - name: mimikatz sekurlsa read access
+    event:
+      SourceImage: 'C:\Users\Public\m.exe'
+      TargetImage: 'C:\Windows\system32\lsass.exe'
+      GrantedAccess: '0x1010'
+negative:
+  - name: Windows Defender scanning lsass
+    event:
+      SourceImage: 'C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.24090.11-0\MsMpEng.exe'
+      TargetImage: 'C:\Windows\System32\lsass.exe'
+      GrantedAccess: '0x1410'
+  - name: query-only access right that cannot read memory
+    event:
+      SourceImage: 'C:\Users\bob\AppData\Local\app.exe'
+      TargetImage: 'C:\Windows\System32\lsass.exe'
+      GrantedAccess: '0x1000'

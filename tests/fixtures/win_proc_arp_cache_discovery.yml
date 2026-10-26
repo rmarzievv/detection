@@ -1,0 +1,27 @@
+# Field names follow Sysmon / Sigma taxonomy. Every rule needs >=1 positive and >=1 negative.
+positive:
+  - name: arp -a from cmd
+    event:
+      Image: 'C:\Windows\System32\ARP.EXE'
+      OriginalFileName: 'arp.exe'
+      CommandLine: 'arp -a'
+      ParentImage: 'C:\Windows\System32\cmd.exe'
+  - name: renamed binary still caught by OriginalFileName
+    event:
+      Image: 'C:\Users\Public\net.exe'
+      OriginalFileName: 'arp.exe'
+      CommandLine: 'net.exe /a'
+      ParentImage: 'C:\Windows\System32\cmd.exe'
+negative:
+  - name: arp used to add a static entry, not enumeration
+    event:
+      Image: 'C:\Windows\System32\ARP.EXE'
+      OriginalFileName: 'arp.exe'
+      CommandLine: 'arp -s 10.0.0.1 00-11-22-33-44-55'
+      ParentImage: 'C:\Windows\System32\cmd.exe'
+  - name: unrelated discovery binary
+    event:
+      Image: 'C:\Windows\System32\ipconfig.exe'
+      OriginalFileName: 'ipconfig.exe'
+      CommandLine: 'ipconfig /all'
+      ParentImage: 'C:\Windows\System32\cmd.exe'

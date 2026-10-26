@@ -1,0 +1,33 @@
+title: ARP Cache Enumeration via arp.exe
+id: 3f6b2a4e-8c1d-4b7a-9e2f-1a5c7d9e0b11
+status: experimental
+description: |
+  Detects enumeration of the local ARP cache with arp.exe, a common early
+  discovery step to find live hosts on the same subnet before lateral movement.
+  Blind spot: the same data is available via PowerShell Get-NetNeighbor or WMI
+  (MSFT_NetNeighbor) without spawning arp.exe - covered by
+  win_ps_netneighbor_discovery.yml.
+author: Riiad Marziev
+date: 2026-10-26
+references:
+  - https://attack.mitre.org/techniques/T1018/
+tags:
+  - attack.discovery
+  - attack.t1018
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_img:
+    - Image|endswith: '\arp.exe'
+    - OriginalFileName: 'arp.exe'
+  selection_cli:
+    CommandLine|contains:
+      - ' -a'
+      - ' /a'
+      - ' -g'
+  condition: all of selection_*
+falsepositives:
+  - Network troubleshooting by administrators
+  - Inventory or monitoring scripts
+level: low

@@ -1,0 +1,30 @@
+title: ARP Cache Enumeration via PowerShell Get-NetNeighbor
+id: 9a1c4e7b-2d3f-4c8a-b6e5-0f7d2a9c4b22
+status: experimental
+description: |
+  Detects PowerShell reading the neighbor (ARP) cache through Get-NetNeighbor or
+  the MSFT_NetNeighbor WMI/CIM class. Closes the gap left by the arp.exe
+  process rule: no new process is created, so only Script Block Logging
+  (Event ID 4104) sees it.
+  Requirement: PowerShell Script Block Logging must be enabled.
+author: Riiad Marziev
+date: 2026-10-26
+references:
+  - https://attack.mitre.org/techniques/T1018/
+tags:
+  - attack.discovery
+  - attack.t1018
+logsource:
+  product: windows
+  category: ps_script
+  definition: 'Requirements: Script Block Logging must be enabled'
+detection:
+  selection:
+    ScriptBlockText|contains:
+      - 'Get-NetNeighbor'
+      - 'MSFT_NetNeighbor'
+  condition: selection
+falsepositives:
+  - Administrative network diagnostics
+  - Configuration management agents that collect network inventory
+level: low

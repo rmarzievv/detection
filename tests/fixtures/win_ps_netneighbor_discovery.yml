@@ -1,0 +1,11 @@
+positive:
+  - name: Get-NetNeighbor cmdlet
+    event:
+      ScriptBlockText: 'Get-NetNeighbor -AddressFamily IPv4 | Where-Object State -eq Reachable'
+  - name: CIM query of MSFT_NetNeighbor
+    event:
+      ScriptBlockText: 'Get-CimInstance -Namespace root/StandardCimv2 -ClassName MSFT_NetNeighbor'
+negative:
+  - name: unrelated network cmdlet
+    event:
+      ScriptBlockText: 'Get-NetIPAddress -AddressFamily IPv4'

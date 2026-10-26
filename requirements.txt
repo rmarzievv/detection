@@ -1,0 +1,8 @@
+pySigma>=1.5,<2
+pySigma-backend-splunk>=2.1
+pySigma-backend-elasticsearch>=2.1
+pySigma-backend-sqlite>=2.0
+pySigma-pipeline-windows>=2.0
+pytest>=8
+yamllint>=1.35
+PyYAML>=6

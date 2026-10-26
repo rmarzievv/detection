@@ -1,0 +1,37 @@
+title: Suspicious Process Access to LSASS Memory
+id: c2e8f1a3-7b4d-4e9c-8a1f-5d6b3c0e7a33
+status: experimental
+description: |
+  Detects a process opening lsass.exe with access rights that allow reading its
+  memory (PROCESS_VM_READ combinations), as done by credential dumpers such as
+  Mimikatz, procdump -ma or comsvcs.dll MiniDump.
+  Requirement: Sysmon Event ID 10 configured to log access to lsass.exe.
+author: Riiad Marziev
+date: 2026-10-26
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+tags:
+  - attack.credential-access
+  - attack.t1003.001
+logsource:
+  product: windows
+  category: process_access
+detection:
+  selection:
+    TargetImage|endswith: '\lsass.exe'
+    GrantedAccess:
+      - '0x1010'
+      - '0x1410'
+      - '0x1438'
+      - '0x143a'
+      - '0x1fffff'
+  filter_system:
+    SourceImage|startswith:
+      - 'C:\Windows\System32\'
+      - 'C:\Program Files\Windows Defender\'
+      - 'C:\ProgramData\Microsoft\Windows Defender\'
+  condition: selection and not filter_system
+falsepositives:
+  - EDR and antivirus agents installed outside the filtered paths
+  - Legitimate memory dumps taken by administrators during troubleshooting
+level: high
